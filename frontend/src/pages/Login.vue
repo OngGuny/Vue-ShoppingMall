@@ -29,6 +29,7 @@
 import {reactive} from "vue";
 import axios from "axios";
 import store from "@/scripts/store";
+import router from "@/scripts/router";
 
 export default {
   setup(){
@@ -43,7 +44,8 @@ export default {
     //login 후 아이디와 이메일 같은걸 store 에 저장을 하고 세션관리하겠다는것. vuex 가 전역 변수 관리하는거니까.
     store.commit('setAccount',res.data);
     sessionStorage.setItem("id",res.data);//임시로 세션에 담아준다.
-    console.log(res);
+    console.log(res.data);
+    router.push({path:"/"});//로그인하고 홈페이지 뜨게.
     window.alert("로그인했슈");
   }).catch(()=>{// 에러 잡아주는거. backend 에서 throw 처리 해준거 여기서 잡아줌
     window.alert("로그인 정보가 존재하지 않습니다.")

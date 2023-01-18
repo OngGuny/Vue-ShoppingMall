@@ -11,6 +11,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import store from "@/scripts/store";
+import axios from "axios";
+import {useRoute} from "vue-router";
+import {watch} from "vue";
 export default {
   name: 'App',
   components: {
@@ -18,10 +21,30 @@ export default {
     Footer,
   },
   setup(){
+
+    const check = ()=>{
+      axios.get("/api/account/check").then(({data})=>{// 세팅한 api 불러오기.
+        console.log(data);
+        if(data){ //얘는 그냥 존재자체가 트루네;;
+          store.commit("setAccount", data || 0); // 값있으면 데이터 없으면 0 ;;; 이게되나;
+        }
+
+      })
+    };
+
+    const route = useRoute();
+    //경로 바뀔떄마다 감시.
+    watch(route, ()=>{
+      check();
+    })
+
+    /* 얘는 위에 api 쓰면서 depreciated 된거.
     const id = sessionStorage.getItem("id");//아이디 있으면 세션에꺼 가져오고
     if(id){//있따면 vuex에 넣어줘야함.
       store.commit("setAccount",id);//이제 새로고침해도 로그아웃안됨
     }
+*/
+
   }
 }
 </script>

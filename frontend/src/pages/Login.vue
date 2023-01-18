@@ -43,7 +43,7 @@ export default {
   axios.post("/api/account/login", state.form).then((res)=>{
     //login 후 아이디와 이메일 같은걸 store 에 저장을 하고 세션관리하겠다는것. vuex 가 전역 변수 관리하는거니까.
     store.commit('setAccount',res.data);
-    sessionStorage.setItem("id",res.data);//임시로 세션에 담아준다.
+    //sessionStorage.setItem("id",res.data);//임시로 세션에 담아준다. ->> 이러면 사용자가 임의로 세션에 데이터 넣으면 로그인됬다고 뜸. API로 해결해보자.
     console.log(res.data);
     router.push({path:"/"});//로그인하고 홈페이지 뜨게.
     window.alert("로그인했슈");

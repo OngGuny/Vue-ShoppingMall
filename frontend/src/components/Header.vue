@@ -41,7 +41,7 @@ export default {
   setup(){
     const logout = ()=>{
     store.commit('setAccount',0);
-    sessionStorage.removeItem("id");// 로그아웃 할때는 세션에 담았던것도 지워줌
+    //sessionStorage.removeItem("id");// 로그아웃 할때는 세션에 담았던것도 지워줌
     router.push({path:'/'});//로그아웃 하고 나선 여기로 보내주겠다는것.
     }
 

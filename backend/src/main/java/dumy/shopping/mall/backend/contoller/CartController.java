@@ -62,5 +62,23 @@ public class CartController {
             cartRepository.save(newCart);
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-}
+    }//postmapping
+
+    @DeleteMapping("/api/cart/items/{itemId}")
+    public ResponseEntity removeCartItem(
+            @PathVariable("itemId") int itemId,
+            @CookieValue(value = "token", required = false) String token//false 설정시, 쿠키가 없으면 null값을 띄운다. 여기의 token에
+            ){
+        if (!jwtService.isValid(token)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        int memberId = jwtService.getId(token);
+        Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
+
+        cartRepository.delete(cart);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }//deletemapping
+
+
+}//controller

@@ -1,39 +1,89 @@
 <template>
+<div class="cart">
+  <div class="container">
+    <ul>
+      <li v-for="(i,idx) in state.items" :key="idx">
+        <img :src="i.imgPath" />
+        <span class="name">{{i.name}}</span>
+        <span class="price">{{ lib.getNumberFormatted(i.price - i.price * i.discountPer / 100) }}원</span>
+        <i class="fa fa-trash" @click="remove(i.id)"></i>
+      </li>
+    </ul>
+    <router-link to="/order" class="btn btn-primary">구입하기</router-link><!-- html 자동완성은 tab/ 버튼말고 그냥 라우터링크로 보내자-->
 
-  <div class="form-signin w-100 m-auto">
-      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-      <div class="form-floating"><!-- 백엔드에서 아이디 관련 작업 해준 뒤에 v-model 달아줌-->
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="state.form.email">
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="state.form.password">
-        <label for="floatingPassword">Password</label>
-      </div>
-
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="w-100 btn btn-lg btn-primary" @click="submit()">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
   </div>
+</div>
+
 
 </template>
 
 <script>
 import axios from "axios";
+import {reactive} from "vue";
+import lib from "@/scripts/lib";
 
-export default {
+export default { //401 에러는 로그인 풀린거.
   setup(){
-    axios.get("/api/cart/items").then(({data})=>{
-      console.log(data);
+    const state = reactive({
+      items:[]//바구니 생성
     })
+
+    const load = ()=>{
+      axios.get("/api/cart/items").then(({data})=>{
+        console.log(data);
+        state.items = data; //바구니에 데이터 담아주기.
+      })
+    };
+
+    const remove = (itemId) =>{
+      axios.delete(`/api/cart/items/${itemId}`).then(()=>{
+        load();//여서 쓸라고 load 로 함수화 해줌
+      })
+    }
+
+    load(); //맨처음에 로드 한번깔아줘야 데이터들 불러온다. 함수화 했기 떄문에 실행해줘야함.
+
+    return {state, lib, remove};
   }
-}
+
+}//setup
 </script>
 
 <style scoped>
+.cart ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cart ul li {
+  border: 1px solid #eee;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.cart ul li img {
+  width: 150px;
+  height: 150px;
+}
+.cart ul li .name {
+  margin-left: 25px;
+
+}
+.cart ul li .price {
+  margin-left: 25px;
+}
+.cart ul li i {
+  float: right;
+  font-size: 20px;
+  margin-top: 65px;
+  margin-right: 50px;
+}
+.cart .btn {
+  width: 300px;
+  display: block;
+  margin: 0 auto; /*가운데 보내기*/
+  padding: 30px 50px;
+  font-size: 20px;
+}
 </style>

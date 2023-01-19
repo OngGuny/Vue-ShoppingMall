@@ -5,17 +5,22 @@
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
       <div class="form-floating"><!-- 백엔드에서 아이디 관련 작업 해준 뒤에 v-model 달아줌-->
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="state.form.email">
+        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+               @keyup.enter="submit()"
+               v-model="state.form.email"><!--엔터칠때 로그인되겠끔 keyup 만들어줌-->
         <label for="floatingInput">Email address</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="state.form.password">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+               @keyup.enter="submit()"
+               v-model="state.form.password">
+
         <label for="floatingPassword">Password</label>
       </div>
 
       <div class="checkbox mb-3">
         <label>
-          <input type="checkbox" value="remember-me"> Remember me
+          <input type="checkbox" value="remember-me" @keyup.enter="submit()"> Remember me
         </label>
       </div>
       <button class="w-100 btn btn-lg btn-primary" @click="submit()">Sign in</button>

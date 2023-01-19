@@ -25,7 +25,7 @@ public class AccountController {
 
     @PostMapping("/api/account/login")
     public ResponseEntity login(@RequestBody Map<String, String> params,
-                                        HttpServletResponse res) {
+                                HttpServletResponse res) {
         Member member = memberRepository.findByEmailAndPassword(params.get("email"), params.get("password"));
 
         if (member != null) { //로그인 한 멤버가 있으면
@@ -47,10 +47,10 @@ public class AccountController {
     }
 
     @GetMapping("/api/account/check") //api 세팅.
-    public ResponseEntity check(@CookieValue(value = "token", required = false) String token){
+    public ResponseEntity check(@CookieValue(value = "token", required = false) String token) {
         Claims claims = jwtService.getClaims(token);
 
-        if(claims != null){
+        if (claims != null) {
             int id = Integer.parseInt(claims.get("id").toString());
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
@@ -58,4 +58,13 @@ public class AccountController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-}
+    @PostMapping("/api/account/logout")//로그아웃기능 구현. 여기서 그냥 수명을 0으로 해버림.
+    public ResponseEntity logout(HttpServletResponse res) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }//postmapping
+
+}//accountController

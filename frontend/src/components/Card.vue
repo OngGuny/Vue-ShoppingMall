@@ -14,7 +14,9 @@
       </p>
       <div class="d-flex justify-content-between align-items-center">
 
-        <button class="btn btn-primary">구입하기</button>
+        <button class="btn btn-primary" @click="addToCart(item.id)">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        </button>
         <!-- 버튼 만들떄. button.btn.btn-primary + Tab 누르니까. 걍 버튼 html 로 만들어줌       -->
         <small class="price  text-muted">
           {{ lib.getNumberFormatted(item.price) }}원
@@ -32,6 +34,7 @@
 
 <script>
 import lib from "@/scripts/lib";
+import axios from "axios";
 
 export default {
   name: "Card",
@@ -39,7 +42,13 @@ export default {
     item: Object
   },
   setup() {
-    return {lib} // alt+enter 로 임포트 바로 가능
+    const addToCart = (itemId) => {
+      axios.post(`/api/cart/items/${itemId}`).then(()=>{// `` 써주기. '' 말고...
+        console.log('success');
+      })
+    };
+
+    return {lib, addToCart} // alt+enter 로 임포트 바로 가능
         // js 는 이렇게 가져온다....
   }
 }
